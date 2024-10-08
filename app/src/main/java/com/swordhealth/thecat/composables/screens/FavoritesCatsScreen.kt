@@ -1,11 +1,9 @@
 package com.swordhealth.thecat.composables.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,7 +11,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.swordhealth.thecat.MainViewModel
-import com.swordhealth.thecat.composables.widgets.CatsLoading
 
 @Composable
 fun FavoritesCatsScreen(
@@ -27,7 +24,7 @@ fun FavoritesCatsScreen(
             val cat = catsPagingItems[index]
             cat?.let {
                 AsyncImage(
-                    model = cat.url,
+                    model = cat.image?.url,
                     contentDescription = null,
                     modifier = Modifier
                         .size(128.dp)

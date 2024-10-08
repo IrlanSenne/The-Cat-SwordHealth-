@@ -7,6 +7,7 @@ import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.paging.CatsPagingSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
 
@@ -20,6 +21,16 @@ class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
             pagingSourceFactory = { CatsPagingSource(catsApi) }
         ).flow
     }
-}
 
+    override fun searchCatsPaging(search: String): Flow<List<CatEntity>> {
+        return flow {
+            try {
+                val result = catsApi.searchCats(search)
+                emit(result)
+            } catch (e: Exception) {
+                emit(emptyList())
+            }
+        }
+    }
+}
 
