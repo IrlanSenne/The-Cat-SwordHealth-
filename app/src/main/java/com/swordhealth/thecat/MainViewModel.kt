@@ -17,13 +17,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(
-    private val getCatsUseCase: GetCatsUseCase
-) : ViewModel() {
-
+class MainViewModel(private val getCatsUseCase: GetCatsUseCase) : ViewModel() {
     private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val catsState: StateFlow<PagingData<CatEntity>> get() = _catsState
-
 
     init {
         fetchCats()
@@ -31,10 +27,13 @@ class MainViewModel(
 
     private fun fetchCats() {
         viewModelScope.launch {
-            getCatsUseCase.execute(Unit).collect {
-                Log.d("fetchCats", "${it}")
-                _catsState.value = it
-            }
+            getCatsUseCase.execute(Unit)
+                .cachedIn(viewModelScope)
+                .collect { pagingData ->
+                    Log.d("fetchCats", "$pagingData")
+                    _catsState.value = pagingData
+                }
         }
     }
 }
+

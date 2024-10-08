@@ -1,4 +1,4 @@
-package com.swordhealth.thecat.composables
+package com.swordhealth.thecat.composables.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,11 +13,14 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.swordhealth.thecat.MainViewModel
+import com.swordhealth.thecat.composables.widgets.CatsLoading
 
 @Composable
-fun CatListScreen(viewModel: MainViewModel) {
-
-    val catsPagingItems = viewModel.catsState.collectAsLazyPagingItems()
+fun FavoritesCatsScreen(
+    mainViewModel: MainViewModel,
+    isLoadingValueChange: (Boolean) -> Unit
+) {
+    val catsPagingItems = mainViewModel.catsState.collectAsLazyPagingItems()
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(catsPagingItems.itemCount) { index ->
@@ -32,33 +35,37 @@ fun CatListScreen(viewModel: MainViewModel) {
                 )
             }
         }
-        
+
         catsPagingItems.apply {
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item {
-                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                        isLoadingValueChange(true)
                     }
                 }
-                
+
                 loadState.refresh is LoadState.Error -> {
                     val error = loadState.refresh as LoadState.Error
                     item {
                         //TODO: Error
                     }
                 }
-                
+
                 loadState.append is LoadState.Loading -> {
                     item {
-                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                        isLoadingValueChange(true)
                     }
                 }
-                
+
                 loadState.append is LoadState.Error -> {
                     val error = loadState.append as LoadState.Error
                     item {
                         //TODO: Error
                     }
+                }
+
+                else -> {
+                    isLoadingValueChange(false)
                 }
             }
         }
