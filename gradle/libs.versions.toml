@@ -15,6 +15,9 @@ moshi = "1.13.0"
 lifecycle = "2.8.6"
 coroutines = "1.7.3"
 coil = "2.4.0"
+pagingRuntime = "3.1.1"
+pagingCompose = "1.0.0-alpha17"
+pagingCommonAndroid = "3.3.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,7 +43,11 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "lifecycle" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }  # Adicione a biblioteca Coil aqui
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+paging-runtime = { group = "androidx.paging", name = "paging-runtime" }
+paging-compose = { group = "androidx.paging", name = "paging-compose" }
+androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
