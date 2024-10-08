@@ -72,4 +72,6 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.material3)
 }
