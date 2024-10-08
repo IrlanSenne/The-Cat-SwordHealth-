@@ -5,6 +5,7 @@ import com.swordhealth.thecat.MainViewModel
 import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.repository.CatRepository
 import com.swordhealth.thecat.data.repository.CatRepositoryImpl
+import com.swordhealth.thecat.usecases.GetCatsUseCase
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -35,6 +36,8 @@ val appModule = module {
     }
 
     single<CatRepository> { CatRepositoryImpl(get()) }
+
+    single { GetCatsUseCase(get()) }
 
     viewModel { MainViewModel(get()) }
 }
