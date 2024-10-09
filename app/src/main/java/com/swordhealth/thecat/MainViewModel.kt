@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.usecases.GetCatsUseCase
 import com.swordhealth.thecat.usecases.SearchCatsUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +16,12 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val getCatsUseCase: GetCatsUseCase,
-    private val searchCatsUseCase: SearchCatsUseCase,
-
-    ) : ViewModel() {
-    private val _catsState: MutableStateFlow<PagingData<CatEntity>> =
-        MutableStateFlow(PagingData.empty())
+    private val searchCatsUseCase: SearchCatsUseCase
+) : ViewModel() {
+    private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val catsState: StateFlow<PagingData<CatEntity>> get() = _catsState
 
+    private var searchJob: Job? = null
     private val searchQuery = MutableStateFlow("")
 
     init {
@@ -39,9 +39,12 @@ class MainViewModel(
         }
     }
 
-    private fun searchCats(query: String) {
-        viewModelScope.launch {
+    fun searchCats(query: String) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
             delay(300)
+
             if (query.isNotEmpty()) {
                 searchCatsUseCase.execute(query)
                     .collect { listCatEntity ->
@@ -60,6 +63,7 @@ class MainViewModel(
         searchCats(query)
     }
 }
+
 
 
 

@@ -11,18 +11,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.swordhealth.thecat.MainViewModel
+import com.swordhealth.thecat.R
 
 @Composable
 fun CatListScreen(
@@ -42,7 +43,7 @@ fun CatListScreen(
                 searchQuery = query
                 mainViewModel.updateSearchQuery(searchQuery)
             },
-            placeholder = { Text("Search by breed name") }
+            placeholder = { Text(stringResource(id = R.string.search_by_breed)) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -72,19 +73,6 @@ fun CatListScreen(
 
             catsPagingItems.apply {
                 when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item {
-                            isLoadingValueChange(true)
-                        }
-                    }
-
-                    loadState.refresh is LoadState.Error -> {
-                        val error = loadState.refresh as LoadState.Error
-                        item {
-                            //TODO: Error
-                        }
-                    }
-
                     loadState.append is LoadState.Loading -> {
                         item {
                             isLoadingValueChange(true)

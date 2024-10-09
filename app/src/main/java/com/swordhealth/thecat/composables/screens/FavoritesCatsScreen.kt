@@ -35,19 +35,6 @@ fun FavoritesCatsScreen(
 
         catsPagingItems.apply {
             when {
-                loadState.refresh is LoadState.Loading -> {
-                    item {
-                        isLoadingValueChange(true)
-                    }
-                }
-
-                loadState.refresh is LoadState.Error -> {
-                    val error = loadState.refresh as LoadState.Error
-                    item {
-                        //TODO: Error
-                    }
-                }
-
                 loadState.append is LoadState.Loading -> {
                     item {
                         isLoadingValueChange(true)

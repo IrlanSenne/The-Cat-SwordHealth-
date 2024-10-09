@@ -11,13 +11,13 @@ class CatsPagingSource(
 ) : PagingSource<Int, CatEntity>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatEntity> {
-        val currentPage = params.key ?: 1
+        val currentPage = params.key ?: 0
         return try {
             val response = catsApi.getCats(page = currentPage)
 
             LoadResult.Page(
                 data = response,
-                prevKey = if (currentPage == 1) null else currentPage - 1,
+                prevKey = if (currentPage == 0) null else currentPage - 1,
                 nextKey = if (response.isEmpty()) null else currentPage + 1
             )
         } catch (exception: IOException) {

@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,8 +44,8 @@ class MainActivity : ComponentActivity() {
             var selectedIndex by remember { mutableStateOf(0) }
 
             val tabsNavigation = listOf(
-                CatsBarItem("Cats", Icons.Default.Home),
-                CatsBarItem("Favorites", Icons.Default.Favorite)
+                CatsBarItem(stringResource(id = R.string.cats), Icons.Default.Home),
+                CatsBarItem(stringResource(id = R.string.favorites), Icons.Default.Favorite)
             )
 
             TheCatTheme {
