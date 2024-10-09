@@ -10,5 +10,6 @@ interface CatRepository {
     fun getCatsPaging(): Flow<PagingData<CatEntity>>
     fun searchCatsPaging(search: String): Flow<List<CatEntity>>
     fun getFavorites(): Flow<List<FavoriteEntity>>
-    fun setAsFavorite(imageId: String): Flow<ImageEntity?>
+    fun setAsFavorite(imageId: String, subId: String?): Flow<ImageEntity?>
+    fun deleteFromFavorite(id: String): Flow<ImageEntity?>
 }

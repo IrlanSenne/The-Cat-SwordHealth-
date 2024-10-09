@@ -19,5 +19,7 @@ data class CatEntity(
     val description: String? = null,
 
     @SerializedName("image")
-    val image: ImageEntity? = null
+    val image: ImageEntity? = null,
+
+    var idFavorite: String? = null
 )

@@ -36,5 +36,5 @@ interface CatsApi {
     @DELETE("favourites/{favourite_id}")
     suspend fun deleteFavorite(
         @Path("favourite_id") favoriteId: String
-    )
+    ): ImageEntity
 }

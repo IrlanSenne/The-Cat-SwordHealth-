@@ -5,6 +5,7 @@ import com.swordhealth.thecat.MainViewModel
 import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.repository.CatRepository
 import com.swordhealth.thecat.data.repository.CatRepositoryImpl
+import com.swordhealth.thecat.usecases.DeleteFavouriteUseCase
 import com.swordhealth.thecat.usecases.GetCatsUseCase
 import com.swordhealth.thecat.usecases.GetFavoritesCatsUseCase
 import com.swordhealth.thecat.usecases.SearchCatsUseCase
@@ -40,12 +41,13 @@ val appModule = module {
 
     single<CatRepository> { CatRepositoryImpl(get()) }
 
-    single { GetCatsUseCase(get()) }
-    single { SearchCatsUseCase(get()) }
+    single { GetCatsUseCase(get(), get()) }
+    single { SearchCatsUseCase(get(), get()) }
     single { GetFavoritesCatsUseCase(get()) }
     single { SetAsFavoriteCatUseCase(get()) }
+    single { DeleteFavouriteUseCase(get()) }
 
-    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get()) }
 }
 
 const val BASE_URL = "https://api.thecatapi.com/v1/"

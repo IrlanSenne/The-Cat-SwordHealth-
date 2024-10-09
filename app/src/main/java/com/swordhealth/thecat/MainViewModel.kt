@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.FavoriteEntity
+import com.swordhealth.thecat.data.entities.FavoriteRequestDto
+import com.swordhealth.thecat.usecases.DeleteFavouriteUseCase
 import com.swordhealth.thecat.usecases.GetCatsUseCase
 import com.swordhealth.thecat.usecases.GetFavoritesCatsUseCase
 import com.swordhealth.thecat.usecases.SearchCatsUseCase
@@ -22,6 +25,7 @@ class MainViewModel(
     private val searchCatsUseCase: SearchCatsUseCase,
     private val getFavoritesCatsUseCase: GetFavoritesCatsUseCase,
     private val setAsFavoriteCatUseCase: SetAsFavoriteCatUseCase,
+    private val deleteFavouriteUseCase: DeleteFavouriteUseCase,
 ) : ViewModel() {
     private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val catsState: StateFlow<PagingData<CatEntity>> get() = _catsState
@@ -40,13 +44,13 @@ class MainViewModel(
         viewModelScope.launch {
             getCatsUseCase.execute(Unit)
                 .cachedIn(viewModelScope)
-                .collect { pagingData ->
-                    _catsState.value = pagingData
+                .collect { updatedPagingData ->
+                    _catsState.value = updatedPagingData
                 }
         }
     }
 
-    fun searchCats(query: String) {
+    private fun searchCats(query: String) {
         searchJob?.cancel()
 
         searchJob = viewModelScope.launch {
@@ -64,6 +68,7 @@ class MainViewModel(
         }
     }
 
+
     fun updateSearchQuery(query: String) {
         searchQuery.value = query
         searchCats(query)
@@ -78,10 +83,21 @@ class MainViewModel(
         }
     }
 
-    fun setAsFavorite(id: String) {
+    fun setAsFavorite(id: String, name: String?) {
         viewModelScope.launch {
-            setAsFavoriteCatUseCase.execute(id)
-                .collect {}
+            setAsFavoriteCatUseCase.execute(FavoriteRequestDto(id, name))
+                .collect {
+                    getFavoritesCats()
+                }
+        }
+    }
+
+    fun deleteFavorite(id: String) {
+        viewModelScope.launch {
+            deleteFavouriteUseCase.execute(id)
+                .collect {
+                    getFavoritesCats()
+                }
         }
     }
 }

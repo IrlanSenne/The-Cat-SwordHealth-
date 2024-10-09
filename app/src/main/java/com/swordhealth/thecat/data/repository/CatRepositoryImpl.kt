@@ -47,10 +47,21 @@ class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
         }
     }
 
-    override fun setAsFavorite(imageId: String): Flow<ImageEntity?> {
+    override fun setAsFavorite(imageId: String, subId: String?): Flow<ImageEntity?> {
         return flow {
             try {
-                val result = catsApi.setFavorite(FavoriteRequestDto(imageId))
+                val result = catsApi.setFavorite(FavoriteRequestDto(imageId, subId))
+                emit(ImageEntity(id = result.id, url = result.url))
+            } catch (e: Exception) {
+                emit(null)
+            }
+        }
+    }
+
+    override fun deleteFromFavorite(id: String): Flow<ImageEntity?> {
+        return flow {
+            try {
+                val result = catsApi.deleteFavorite(id)
                 emit(ImageEntity(id = result.id, url = result.url))
             } catch (e: Exception) {
                 emit(null)
