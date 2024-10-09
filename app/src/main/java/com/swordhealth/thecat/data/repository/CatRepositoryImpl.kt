@@ -5,6 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.entities.CatEntity
+import com.swordhealth.thecat.data.entities.FavoriteEntity
+import com.swordhealth.thecat.data.entities.FavoriteRequestDto
+import com.swordhealth.thecat.data.entities.ImageEntity
 import com.swordhealth.thecat.data.paging.CatsPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -29,6 +32,28 @@ class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
                 emit(result)
             } catch (e: Exception) {
                 emit(emptyList())
+            }
+        }
+    }
+
+    override fun getFavorites(): Flow<List<FavoriteEntity>> {
+        return flow {
+            try {
+                val result = catsApi.getFavorites()
+                emit(result)
+            } catch (e: Exception) {
+                emit(emptyList())
+            }
+        }
+    }
+
+    override fun setAsFavorite(imageId: String): Flow<ImageEntity?> {
+        return flow {
+            try {
+                val result = catsApi.setFavorite(FavoriteRequestDto(imageId))
+                emit(ImageEntity(id = result.id, url = result.url))
+            } catch (e: Exception) {
+                emit(null)
             }
         }
     }

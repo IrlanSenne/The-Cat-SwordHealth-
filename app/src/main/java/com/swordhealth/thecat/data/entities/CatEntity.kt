@@ -20,9 +20,4 @@ data class CatEntity(
 
     @SerializedName("image")
     val image: ImageEntity? = null
-) {
-    data class ImageEntity(
-        @SerializedName("url")
-        val url: String? = null
-    )
-}
+)

@@ -6,7 +6,9 @@ import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.repository.CatRepository
 import com.swordhealth.thecat.data.repository.CatRepositoryImpl
 import com.swordhealth.thecat.usecases.GetCatsUseCase
+import com.swordhealth.thecat.usecases.GetFavoritesCatsUseCase
 import com.swordhealth.thecat.usecases.SearchCatsUseCase
+import com.swordhealth.thecat.usecases.SetAsFavoriteCatUseCase
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -40,8 +42,10 @@ val appModule = module {
 
     single { GetCatsUseCase(get()) }
     single { SearchCatsUseCase(get()) }
+    single { GetFavoritesCatsUseCase(get()) }
+    single { SetAsFavoriteCatUseCase(get()) }
 
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
 }
 
 const val BASE_URL = "https://api.thecatapi.com/v1/"
