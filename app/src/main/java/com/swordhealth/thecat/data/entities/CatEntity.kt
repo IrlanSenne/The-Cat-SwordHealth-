@@ -18,6 +18,9 @@ data class CatEntity(
     @SerializedName("description")
     val description: String? = null,
 
+    @SerializedName("life_span")
+    val lifeSpan: String? = null,
+
     @SerializedName("image")
     val image: ImageEntity? = null,
 

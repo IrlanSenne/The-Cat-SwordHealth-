@@ -6,6 +6,12 @@ data class ImageEntity(
     @SerializedName("id")
     val id: String? = null,
 
+    @SerializedName("width")
+    val width: Int? = null,
+
+    @SerializedName("height")
+    val height: Int? = null,
+
     @SerializedName("url")
     val url: String? = null
 )

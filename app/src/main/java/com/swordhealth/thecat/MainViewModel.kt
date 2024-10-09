@@ -1,11 +1,9 @@
 package com.swordhealth.thecat
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.FavoriteEntity
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
@@ -27,6 +25,7 @@ class MainViewModel(
     private val setAsFavoriteCatUseCase: SetAsFavoriteCatUseCase,
     private val deleteFavouriteUseCase: DeleteFavouriteUseCase,
 ) : ViewModel() {
+
     private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val catsState: StateFlow<PagingData<CatEntity>> get() = _catsState
 
@@ -68,7 +67,6 @@ class MainViewModel(
         }
     }
 
-
     fun updateSearchQuery(query: String) {
         searchQuery.value = query
         searchCats(query)
@@ -87,7 +85,7 @@ class MainViewModel(
         viewModelScope.launch {
             setAsFavoriteCatUseCase.execute(FavoriteRequestDto(id, name))
                 .collect {
-                    getFavoritesCats()
+                    fetchCats()
                 }
         }
     }
@@ -96,11 +94,13 @@ class MainViewModel(
         viewModelScope.launch {
             deleteFavouriteUseCase.execute(id)
                 .collect {
+                    fetchCats()
                     getFavoritesCats()
                 }
         }
     }
 }
+
 
 
 

@@ -1,41 +1,26 @@
 package com.swordhealth.thecat.ui.screens
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.swordhealth.thecat.MainViewModel
+import com.swordhealth.thecat.ui.widgets.CatGrid
 
 
 @Composable
 fun FavoritesCatsScreen(
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel? = null
 ) {
-    val favoritesCatsList = mainViewModel.favoritesCatsState.collectAsState().value
+    val favoritesCatsList = mainViewModel?.favoritesCatsState?.collectAsState()?.value
 
     LaunchedEffect(favoritesCatsList) {
-        mainViewModel.getFavoritesCats()
+        mainViewModel?.getFavoritesCats()
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(favoritesCatsList) { _, favoriteCat ->
-
-            AsyncImage(
-                model = favoriteCat.image?.url,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(128.dp)
-                    .padding(8.dp),
-                contentScale = ContentScale.Crop
-            )
+    CatGrid(
+        list = favoritesCatsList,
+        onClickFavourite = { cat ->
+            mainViewModel?.deleteFavorite(cat.idFavorite ?: "")
         }
-    }
+    )
 }

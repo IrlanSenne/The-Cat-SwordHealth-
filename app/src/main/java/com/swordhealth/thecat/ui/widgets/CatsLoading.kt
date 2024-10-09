@@ -1,4 +1,4 @@
-package com.swordhealth.thecat.composables.widgets
+package com.swordhealth.thecat.ui.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

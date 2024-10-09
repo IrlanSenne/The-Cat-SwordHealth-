@@ -9,7 +9,12 @@ class SetAsFavoriteCatUseCase(
     private val repository: CatRepository
 ) : BaseUseCase<FavoriteRequestDto, Flow<ImageEntity?>> {
 
-    override suspend fun execute(favoriteRequestDto: FavoriteRequestDto) : Flow<ImageEntity?> {
-        return repository.setAsFavorite(imageId = favoriteRequestDto.imageId, subId = favoriteRequestDto.subId)
+    override suspend fun execute(
+        favoriteRequestDto: FavoriteRequestDto
+    ): Flow<ImageEntity?> {
+        return repository.setAsFavorite(
+            imageId = favoriteRequestDto.imageId,
+            subId = favoriteRequestDto.subId
+        )
     }
 }
