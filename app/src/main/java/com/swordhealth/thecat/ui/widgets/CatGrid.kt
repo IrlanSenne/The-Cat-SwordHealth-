@@ -45,16 +45,23 @@ fun CatGrid(
                     val favoriteEntity = list[index]
 
                     val textInformations = favoriteEntity.name?.split(".") ?: emptyList()
-                    val nameFavorite = if (textInformations.isNotEmpty()) textInformations[0] else ""
 
-                    val averageInformations = favoriteEntity.name?.split("-") ?: emptyList()
-                    val lowerAverage = if (averageInformations.isNotEmpty()) averageInformations[1] else ""
+                    val nameFavorite = if (textInformations.isNotEmpty()) textInformations[0] else ""
+                    val lifeSpanFavorite = if (textInformations.size > 1) textInformations[1] else ""
+
+                    val lifeSpanRange = lifeSpanFavorite.split("-").mapNotNull { it.trim().toIntOrNull() }
+
+                    val averageLifeSpan = if (lifeSpanRange.size == 2) {
+                        (lifeSpanRange[0] + lifeSpanRange[1]) / 2
+                    } else {
+                        0
+                    }
 
                     val cat = CatEntity(
                         idFavorite = favoriteEntity.id,
                         name = nameFavorite,
                         image = favoriteEntity.image,
-                        lifeSpan = lowerAverage
+                        lifeSpan = "$averageLifeSpan"
                     )
 
                     CatGridItem(cat = cat,  onClickFavorite = onClickFavourite)
