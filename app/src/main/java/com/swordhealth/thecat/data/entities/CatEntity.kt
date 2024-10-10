@@ -30,10 +30,12 @@ data class CatEntity(
 
 @Serializable
 data class CatUI(
+    val id: String? = null,
     val name: String? = null,
     val origin: String? = null,
     val temperament: String? = null,
     val description: String? = null,
     val lifeSpan: String? = null,
-    val image: ImageUI? = null
+    val image: ImageUI? = null,
+    val idFavorite: String? = null
 )

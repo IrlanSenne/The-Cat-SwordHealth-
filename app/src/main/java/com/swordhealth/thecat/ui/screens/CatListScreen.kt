@@ -3,7 +3,17 @@ package com.swordhealth.thecat.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -18,6 +30,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.swordhealth.thecat.CatRoutes
 import com.swordhealth.thecat.MainViewModel
+import com.swordhealth.thecat.R
 import com.swordhealth.thecat.data.entities.CatUI
 import com.swordhealth.thecat.navigateWithObject
 import com.swordhealth.thecat.ui.mappers.toUI
@@ -25,6 +38,7 @@ import com.swordhealth.thecat.ui.theme.TheCatTheme
 import com.swordhealth.thecat.ui.widgets.CatGrid
 import com.swordhealth.thecat.ui.widgets.CatTextFielad
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatListScreen(
     mainViewModel: MainViewModel? = null,
@@ -34,50 +48,56 @@ fun CatListScreen(
     val catsPagingItems = mainViewModel?.catsState?.collectAsLazyPagingItems()
     var searchQuery by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(24.dp))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    CatTextFielad(searchQuery) {
+                        searchQuery = it
+                        mainViewModel?.updateSearchQuery(searchQuery)
+                    }
+                }
+            )
+        }
+    )
+    { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CatGrid(
+                listLazy = catsPagingItems,
+                onClickFavourite = { cat ->
+                    val idFavorite = cat.idFavorite
+                    val imageId = cat.image?.id
 
-        CatTextFielad(searchQuery) {
-            searchQuery = it
-            mainViewModel?.updateSearchQuery(searchQuery)
+                    if (!idFavorite.isNullOrEmpty()) {
+                        mainViewModel?.deleteFavorite(idFavorite)
+                        return@CatGrid
+                    }
+
+                    if (!imageId.isNullOrEmpty()) {
+                        mainViewModel?.setAsFavorite(imageId, "${cat.name}.${cat.lifeSpan}")
+                    }
+                },
+                onClickDetail = { catEntity ->
+                    navigateWithObject(
+                        navController,
+                        CatRoutes.catDetailScreen,
+                        catEntity.toUI(),
+                        CatUI.serializer()
+                    )
+                }
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CatGrid(
-            listLazy = catsPagingItems,
-            onClickFavourite = { cat ->
-                val idFavorite = cat.idFavorite
-                val imageId = cat.image?.id
-
-                if (!idFavorite.isNullOrEmpty()) {
-                    mainViewModel?.deleteFavorite(idFavorite)
-                    return@CatGrid
-                }
-
-                if (!imageId.isNullOrEmpty()) {
-                    mainViewModel?.setAsFavorite(imageId, "${cat.name}.${cat.lifeSpan}")
-                }
-            },
-            onClickDetail = { catEntity ->
-
-                navigateWithObject(
-                    navController,
-                    CatRoutes.catDetailScreen,
-                    catEntity.toUI(),
-                    CatUI.serializer()
-                )
+        catsPagingItems?.apply {
+            when {
+                loadState.append is LoadState.Loading -> isLoadingValueChange(true)
+                else -> isLoadingValueChange(false)
             }
-        )
-    }
-
-    catsPagingItems?.apply {
-        when {
-            loadState.append is LoadState.Loading -> isLoadingValueChange(true)
-            else -> isLoadingValueChange(false)
         }
     }
 }

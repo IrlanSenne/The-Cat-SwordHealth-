@@ -11,8 +11,9 @@ fun CatEntity.toUI() = CatUI(
     temperament = this.temperament,
     description = this.description,
     lifeSpan = this.lifeSpan,
+    idFavorite = this.idFavorite,
     image = ImageUI(
-        id = this.id,
+        id = this.image?.id,
         width = this.image?.width,
         height = this.image?.height,
         url = this.image?.url
@@ -20,12 +21,13 @@ fun CatEntity.toUI() = CatUI(
 )
 
 fun CatUI.toEntity() = CatEntity(
-    id = this.image?.id,
+    id = this.id,
     name = this.name,
     origin = this.origin,
     temperament = this.temperament,
     description = this.description,
     lifeSpan = this.lifeSpan,
+    idFavorite = this.idFavorite,
     image = ImageEntity(
         id = this.image?.id,
         width = this.image?.width,

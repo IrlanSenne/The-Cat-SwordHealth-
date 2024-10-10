@@ -31,13 +31,13 @@ fun CatTextFielad(
             onValueChange(query)
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.Black.copy(alpha = 0.7f),
-            unfocusedContainerColor = Color.Black,
-            cursorColor = Color.White,
-            focusedTextColor = Color.White,
-            unfocusedTextColor =  Color.White,
-            focusedLeadingIconColor = Color.White,
-            unfocusedLeadingIconColor = Color.LightGray
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            cursorColor = Color.Black,
+            focusedTextColor = Color.Black,
+            unfocusedTextColor =  Color.Black,
+            focusedLeadingIconColor = Color.Black,
+            unfocusedLeadingIconColor = Color.Black
         ),
         placeholder = {
             Text(

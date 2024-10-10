@@ -38,7 +38,7 @@ fun MainNavigation(mainViewModel: MainViewModel) {
             val catUI = catEntityJson?.let { Json.decodeFromString<CatUI>(it) }
 
             catUI?.let {
-                CatDetailScreen(navController, it)
+                CatDetailScreen(mainViewModel, navController, it)
             }
         }
     }

@@ -15,16 +15,17 @@ import com.swordhealth.thecat.data.entities.FavoriteEntity
 
 @Composable
 fun CatGrid(
+    modifier: Modifier = Modifier,
     listLazy: LazyPagingItems<CatEntity>? = null,
     list: List<FavoriteEntity>? = null,
     onClickDetail: (CatEntity) -> Unit = {},
     onClickFavourite: (CatEntity) -> Unit = {}
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
+        columns = GridCells.Fixed(3),
     ) {
         listLazy?.let {
             items(listLazy.itemCount) { index ->
