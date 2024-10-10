@@ -8,11 +8,17 @@ import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.FavoriteEntity
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
 import com.swordhealth.thecat.data.entities.ImageEntity
+import com.swordhealth.thecat.data.localdatabase.dao.CatDao
 import com.swordhealth.thecat.data.paging.CatsPagingSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
-class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
+class CatRepositoryImpl(
+    private val catsApi: CatsApi,
+    private val catDao: CatDao,
+) : CatRepository {
 
     override fun getCatsPaging(): Flow<PagingData<CatEntity>> {
         return Pager(
@@ -65,6 +71,27 @@ class CatRepositoryImpl(private val catsApi: CatsApi) : CatRepository {
                 emit(ImageEntity(id = result.id, url = result.url))
             } catch (e: Exception) {
                 emit(null)
+            }
+        }
+    }
+
+    override fun getCatsLocal(): Flow<List<CatEntity>> {
+        return flow {
+            try {
+                catDao.getCats()
+            } catch (e: Exception) {
+                emit(emptyList())
+            }
+        }
+    }
+
+    override fun saveCatLocal(cat: CatEntity): Flow<Unit>  {
+        return flow {
+            try {
+                catDao.saveCats(cat)
+                emit(Unit)
+            } catch (e: Exception) {
+                emit(Unit)
             }
         }
     }

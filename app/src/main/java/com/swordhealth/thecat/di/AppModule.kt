@@ -1,8 +1,10 @@
 package com.swordhealth.thecat.di
 
+import androidx.room.Room
 import com.swordhealth.thecat.BuildConfig
 import com.swordhealth.thecat.MainViewModel
 import com.swordhealth.thecat.data.api.CatsApi
+import com.swordhealth.thecat.data.localdatabase.CatDatabase
 import com.swordhealth.thecat.data.repository.CatRepository
 import com.swordhealth.thecat.data.repository.CatRepositoryImpl
 import com.swordhealth.thecat.usecases.DeleteFavouriteUseCase
@@ -11,6 +13,7 @@ import com.swordhealth.thecat.usecases.GetFavoritesCatsUseCase
 import com.swordhealth.thecat.usecases.SearchCatsUseCase
 import com.swordhealth.thecat.usecases.SetAsFavoriteCatUseCase
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -39,7 +42,18 @@ val appModule = module {
             .create(CatsApi::class.java)
     }
 
-    single<CatRepository> { CatRepositoryImpl(get()) }
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            CatDatabase::class.java, "cat-database"
+        ).build()
+    }
+
+    single {
+        get<CatDatabase>().catDao()
+    }
+
+    single<CatRepository> { CatRepositoryImpl(get(), get()) }
 
     single { GetCatsUseCase(get()) }
     single { SearchCatsUseCase(get()) }
