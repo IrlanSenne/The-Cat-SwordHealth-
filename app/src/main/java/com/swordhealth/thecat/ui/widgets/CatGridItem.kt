@@ -43,6 +43,11 @@ fun CatGridItem(
         else -> R.drawable.ic_favourite_empty
     }
 
+    val colorImageFavourite = when (cat.idFavorite?.isNotEmpty() == true) {
+        true -> Color.Red
+        else -> Color.White
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -63,7 +68,7 @@ fun CatGridItem(
                     .offset(x = -(8.dp), y = 8.dp)
                     .size(30.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(Color.Gray.copy(alpha = 0.5f))
                     .padding(4.dp)
                     .clickable { onClickFavorite(cat) },
                 contentAlignment = Alignment.Center
@@ -72,7 +77,7 @@ fun CatGridItem(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = imageFavourite),
                     contentDescription = "Favorite Icon",
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.White),
+                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(colorImageFavourite),
                 )
             }
         }

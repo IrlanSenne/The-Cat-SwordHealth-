@@ -24,6 +24,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,9 +52,16 @@ fun CatDetailScreen(
     navController: NavHostController? = null,
     catUI: CatUI?
 ) {
-    val imageFavourite = when (catUI?.idFavorite?.isNotEmpty() == true) {
+    var isFavorite by remember { mutableStateOf(catUI?.idFavorite?.isNotEmpty() == true) }
+
+    val imageFavourite = when (isFavorite) {
         true -> R.drawable.ic_favorite_filled
         else -> R.drawable.ic_favourite_empty
+    }
+
+    val colorImageFavourite = when (isFavorite) {
+        true -> Color.Red
+        else -> Color.White
     }
 
     Scaffold(
@@ -108,36 +119,47 @@ fun CatDetailScreen(
             RowItemIformation(stringResource(R.string.temperament), catUI?.temperament ?: "")
             RowItemIformation(stringResource(R.string.description), catUI?.description ?: "")
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Box(
                 modifier = Modifier
-                    .size(136.dp)
+                    .size(96.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .padding(12.dp)
+                    .background(Color.Gray.copy(alpha = 0.5f))
                     .clickable {
                         val idFavorite = catUI?.idFavorite
                         val imageId = catUI?.image?.id
 
                         if (!idFavorite.isNullOrEmpty()) {
                             mainViewModel.deleteFavorite(idFavorite)
+                            isFavorite = !isFavorite
                             return@clickable
                         }
 
                         if (!imageId.isNullOrEmpty()) {
                             mainViewModel.setAsFavorite(imageId, "${catUI.name}.${catUI.lifeSpan}")
+                            isFavorite = !isFavorite
                         }
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    modifier = Modifier.size(96.dp),
+                    modifier = Modifier.fillMaxSize(0.9f),
                     painter = painterResource(id = imageFavourite),
                     contentDescription = "Favorite Icon",
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.White),
+                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(colorImageFavourite),
                 )
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(if (!isFavorite) R.string.add_to_favourites else R.string.remove_from_favourites),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -151,12 +173,14 @@ fun RowItemIformation(attribute: String, value: String) {
         modifier = Modifier.padding(bottom = 4.dp),
         text = attribute,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        color = Color.Gray
     )
 
     Text(
         text = value,
         fontSize = 14.sp,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        color = Color.Gray
     )
 }
