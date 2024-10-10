@@ -37,6 +37,7 @@ class MainViewModel(
 
     init {
         fetchCats()
+        getFavoritesCats()
     }
 
     private fun fetchCats() {
@@ -86,6 +87,7 @@ class MainViewModel(
             setAsFavoriteCatUseCase.execute(FavoriteRequestDto(id, name))
                 .collect {
                     fetchCats()
+                    getFavoritesCats()
                 }
         }
     }
@@ -100,9 +102,3 @@ class MainViewModel(
         }
     }
 }
-
-
-
-
-
-

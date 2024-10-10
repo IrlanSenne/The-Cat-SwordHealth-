@@ -1,6 +1,7 @@
 package com.swordhealth.thecat.data.entities
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 data class CatEntity(
     @SerializedName("id")
@@ -25,4 +26,14 @@ data class CatEntity(
     val image: ImageEntity? = null,
 
     var idFavorite: String? = null
+)
+
+@Serializable
+data class CatUI(
+    val name: String? = null,
+    val origin: String? = null,
+    val temperament: String? = null,
+    val description: String? = null,
+    val lifeSpan: String? = null,
+    val image: ImageUI? = null
 )
