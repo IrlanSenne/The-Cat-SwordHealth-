@@ -5,7 +5,7 @@ import com.swordhealth.thecat.data.entities.CatUI
 import com.swordhealth.thecat.data.entities.ImageEntity
 import com.swordhealth.thecat.data.entities.ImageUI
 
-fun CatEntity.toUI() = CatUI(
+fun CatEntity.toUI(isFromFavourite: Boolean = false) = CatUI(
     name = this.name,
     origin = this.origin,
     temperament = this.temperament,
@@ -17,7 +17,8 @@ fun CatEntity.toUI() = CatUI(
         width = this.image?.width,
         height = this.image?.height,
         url = this.image?.url
-    )
+    ),
+    isFromFavourites = isFromFavourite
 )
 
 fun CatUI.toEntity() = CatEntity(

@@ -25,8 +25,10 @@ fun MainNavigation(mainViewModel: MainViewModel) {
             route = CatRoutes.catHomeScreen,
             enterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
             exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) }
-        ) {
-            CatHomeScreen(mainViewModel, navController)
+        ) { backStackEntry ->
+            val isFromFavourite = backStackEntry.savedStateHandle.getLiveData<Boolean>("fromFavorites")
+
+            CatHomeScreen(mainViewModel, navController, isFromFavourite.value ?: false)
         }
         composable(
             route = "${CatRoutes.catDetailScreen}/{catEntityJson}",

@@ -37,17 +37,6 @@ fun CatGridItem(
     onClickDetail: (CatEntity) -> Unit = {},
     onClickFavorite: (CatEntity) -> Unit = {}
 ) {
-
-    val imageFavourite = when (cat.idFavorite?.isNotEmpty() == true) {
-        true -> R.drawable.ic_favorite_filled
-        else -> R.drawable.ic_favourite_empty
-    }
-
-    val colorImageFavourite = when (cat.idFavorite?.isNotEmpty() == true) {
-        true -> Color.Red
-        else -> Color.White
-    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -79,8 +68,6 @@ fun CatGridItem(
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         )
-
-        Spacer(modifier = Modifier.height(4.dp))
 
         if (cat.idFavorite?.isNotEmpty() == true && !isHomeScreen) {
             Text(

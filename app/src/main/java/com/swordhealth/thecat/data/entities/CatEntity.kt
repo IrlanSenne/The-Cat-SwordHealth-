@@ -37,5 +37,6 @@ data class CatUI(
     val description: String? = null,
     val lifeSpan: String? = null,
     val image: ImageUI? = null,
-    val idFavorite: String? = null
+    val idFavorite: String? = null,
+    val isFromFavourites: Boolean? = false,
 )

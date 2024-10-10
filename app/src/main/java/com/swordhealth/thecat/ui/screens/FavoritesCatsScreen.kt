@@ -17,8 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.swordhealth.thecat.CatRoutes
 import com.swordhealth.thecat.MainViewModel
 import com.swordhealth.thecat.R
+import com.swordhealth.thecat.data.entities.CatUI
+import com.swordhealth.thecat.navigateWithObject
+import com.swordhealth.thecat.ui.mappers.toUI
 import com.swordhealth.thecat.ui.widgets.CatGrid
 
 
@@ -28,7 +33,7 @@ fun FavoritesCatsScreen(
     mainViewModel: MainViewModel? = null,
     navController: NavHostController? = null
 ) {
-    val favoritesCatsList = mainViewModel?.favoritesCatsState?.collectAsState()?.value
+    val catsFavouritesPagingItems = mainViewModel?.favoritesCatsState?.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -45,9 +50,17 @@ fun FavoritesCatsScreen(
     ) { paddingValues ->
         CatGrid(
             modifier = Modifier.padding(paddingValues),
-            list = favoritesCatsList,
+            listLazy = catsFavouritesPagingItems,
             onClickFavourite = { cat ->
                 mainViewModel?.deleteFavorite(cat.idFavorite ?: "")
+            },
+            onClickDetail = { catEntity ->
+                navigateWithObject(
+                    navController,
+                    CatRoutes.catDetailScreen,
+                    catEntity.toUI(true),
+                    CatUI.serializer()
+                )
             }
         )
     }

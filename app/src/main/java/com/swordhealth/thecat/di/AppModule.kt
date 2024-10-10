@@ -41,8 +41,8 @@ val appModule = module {
 
     single<CatRepository> { CatRepositoryImpl(get()) }
 
-    single { GetCatsUseCase(get(), get()) }
-    single { SearchCatsUseCase(get(), get()) }
+    single { GetCatsUseCase(get()) }
+    single { SearchCatsUseCase(get()) }
     single { GetFavoritesCatsUseCase(get()) }
     single { SetAsFavoriteCatUseCase(get()) }
     single { DeleteFavouriteUseCase(get()) }

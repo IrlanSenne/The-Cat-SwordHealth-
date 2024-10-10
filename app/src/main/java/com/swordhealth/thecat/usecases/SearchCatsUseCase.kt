@@ -6,19 +6,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class SearchCatsUseCase(
-    private val repository: CatRepository,
-    private val getFavoritesCatsUseCase: GetFavoritesCatsUseCase
+    private val repository: CatRepository
 ) : BaseUseCase<String, Flow<List<CatEntity>>> {
 
     override suspend fun execute(input: String): Flow<List<CatEntity>> {
         return combine(
             repository.searchCatsPaging(input),
-            getFavoritesCatsUseCase.execute(Unit)
+            repository.getFavorites()
         ) { catList, favoritesList ->
             val favoritesMap = favoritesList.associateBy { it.image?.id }
 
             catList.map { catEntity ->
                 val favoriteEntity = favoritesMap[catEntity.image?.id]
+
                 catEntity.copy(idFavorite = favoriteEntity?.id)
             }
         }

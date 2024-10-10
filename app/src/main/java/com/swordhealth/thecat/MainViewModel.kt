@@ -29,8 +29,8 @@ class MainViewModel(
     private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val catsState: StateFlow<PagingData<CatEntity>> get() = _catsState
 
-    private val _favoritesCatsState: MutableStateFlow<List<FavoriteEntity>> = MutableStateFlow(emptyList())
-    val favoritesCatsState: StateFlow<List<FavoriteEntity>> get() = _favoritesCatsState
+    private val _favoritesCatsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
+    val favoritesCatsState: StateFlow<PagingData<CatEntity>> get() = _favoritesCatsState
 
     private var searchJob: Job? = null
     private var setAsFavoriteJob: Job? = null
@@ -78,6 +78,7 @@ class MainViewModel(
     fun getFavoritesCats() {
         viewModelScope.launch {
             getFavoritesCatsUseCase.execute(Unit)
+                .cachedIn(viewModelScope)
                 .collect { favoritesList ->
                     _favoritesCatsState.value = favoritesList
                 }

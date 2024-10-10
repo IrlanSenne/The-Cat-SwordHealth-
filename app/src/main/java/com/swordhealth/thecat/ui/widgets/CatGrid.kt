@@ -17,7 +17,6 @@ import com.swordhealth.thecat.data.entities.FavoriteEntity
 fun CatGrid(
     modifier: Modifier = Modifier,
     listLazy: LazyPagingItems<CatEntity>? = null,
-    list: List<FavoriteEntity>? = null,
     onClickDetail: (CatEntity) -> Unit = {},
     onClickFavourite: (CatEntity) -> Unit = {}
 ) {
@@ -41,7 +40,7 @@ fun CatGrid(
                 }
             }
         } ?: run {
-            list?.let {
+      /*      list?.let {
                 items(list.size) { index ->
                     val favoriteEntity = list[index]
 
@@ -67,7 +66,7 @@ fun CatGrid(
 
                     CatGridItem(cat = cat,  onClickFavorite = onClickFavourite)
                 }
-            }
+            }*/
         }
 
         item {

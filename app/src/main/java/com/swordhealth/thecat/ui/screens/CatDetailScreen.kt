@@ -66,7 +66,13 @@ fun CatDetailScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController?.navigateUp() }) {
+                    IconButton(onClick = {
+                        navController?.previousBackStackEntry?.savedStateHandle?.set(
+                            "fromFavorites", catUI?.isFromFavourites
+                        )
+
+                        navController?.navigateUp()
+                    }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "-")
                     }
                 }

@@ -22,10 +22,11 @@ import com.swordhealth.thecat.ui.widgets.CatsLoading
 @Composable
 fun CatHomeScreen(
     mainViewModel: MainViewModel? = null,
-    navController: NavHostController? = null
+    navController: NavHostController? = null,
+    isFromFavourites: Boolean = false
 ) {
     var isLoading by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(if (isFromFavourites) 1 else 0) }
 
     val tabsNavigation = listOf(
         CatsBarItem(stringResource(id = R.string.cats), Icons.Default.Home),
@@ -42,6 +43,7 @@ fun CatHomeScreen(
                     selectedIndex = it
                 }
             }) { innerPadding ->
+
             when (selectedIndex) {
                 0 -> CatListScreen(mainViewModel, navController) { isLoading = it }
                 1 -> FavoritesCatsScreen(mainViewModel, navController)
