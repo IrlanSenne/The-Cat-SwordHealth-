@@ -62,24 +62,15 @@ fun CatGridItem(
         ) {
             CatImage(cat)
 
-            Box(
+            FavoriteIcon(
+                sizeBox = 30,
+                sizeImage = 24,
+                isFavorite = cat.idFavorite?.isNotEmpty() == true,
+                onClick = { onClickFavorite(cat) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .offset(x = -(8.dp), y = 8.dp)
-                    .size(30.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray.copy(alpha = 0.5f))
-                    .padding(4.dp)
-                    .clickable { onClickFavorite(cat) },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = imageFavourite),
-                    contentDescription = "Favorite Icon",
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(colorImageFavourite),
-                )
-            }
+            )
         }
 
         Spacer(modifier = Modifier.height(4.dp))

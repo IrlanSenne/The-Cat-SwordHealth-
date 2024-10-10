@@ -44,6 +44,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.swordhealth.thecat.MainViewModel
 import com.swordhealth.thecat.R
 import com.swordhealth.thecat.data.entities.CatUI
+import com.swordhealth.thecat.ui.widgets.FavoriteIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,16 +54,6 @@ fun CatDetailScreen(
     catUI: CatUI?
 ) {
     var isFavorite by remember { mutableStateOf(catUI?.idFavorite?.isNotEmpty() == true) }
-
-    val imageFavourite = when (isFavorite) {
-        true -> R.drawable.ic_favorite_filled
-        else -> R.drawable.ic_favourite_empty
-    }
-
-    val colorImageFavourite = when (isFavorite) {
-        true -> Color.Red
-        else -> Color.White
-    }
 
     Scaffold(
         topBar = {
@@ -121,35 +112,27 @@ fun CatDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Box(
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray.copy(alpha = 0.5f))
-                    .clickable {
-                        val idFavorite = catUI?.idFavorite
-                        val imageId = catUI?.image?.id
+            FavoriteIcon(
+                sizeBox = 96,
+                sizeImage = 84,
+                isFavorite = isFavorite,
+                onClick = {
+                    val idFavorite = catUI?.idFavorite
+                    val imageId = catUI?.image?.id
 
-                        if (!idFavorite.isNullOrEmpty()) {
-                            mainViewModel.deleteFavorite(idFavorite)
-                            isFavorite = !isFavorite
-                            return@clickable
-                        }
+                    if (!idFavorite.isNullOrEmpty()) {
+                        mainViewModel.deleteFavorite(idFavorite, true)
+                        isFavorite = !isFavorite
+                        return@FavoriteIcon
+                    }
 
-                        if (!imageId.isNullOrEmpty()) {
-                            mainViewModel.setAsFavorite(imageId, "${catUI.name}.${catUI.lifeSpan}")
-                            isFavorite = !isFavorite
-                        }
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(0.9f),
-                    painter = painterResource(id = imageFavourite),
-                    contentDescription = "Favorite Icon",
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(colorImageFavourite),
-                )
-            }
+                    if (!imageId.isNullOrEmpty()) {
+                        mainViewModel.setAsFavorite(imageId, "${catUI.name}.${catUI.lifeSpan}", true)
+                        isFavorite = !isFavorite
+                    }
+                }
+            )
+
 
             Spacer(modifier = Modifier.height(12.dp))
             Text(

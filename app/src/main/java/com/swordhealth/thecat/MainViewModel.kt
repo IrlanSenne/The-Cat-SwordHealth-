@@ -33,6 +33,8 @@ class MainViewModel(
     val favoritesCatsState: StateFlow<List<FavoriteEntity>> get() = _favoritesCatsState
 
     private var searchJob: Job? = null
+    private var setAsFavoriteJob: Job? = null
+    private var deleteFavoriteJob: Job? = null
     private val searchQuery = MutableStateFlow("")
 
     init {
@@ -82,8 +84,14 @@ class MainViewModel(
         }
     }
 
-    fun setAsFavorite(id: String, name: String?) {
-        viewModelScope.launch {
+    fun setAsFavorite(id: String, name: String?, delay: Boolean = false) {
+        setAsFavoriteJob?.cancel()
+
+        setAsFavoriteJob = viewModelScope.launch {
+            if (delay) {
+                delay(1000)
+            }
+
             setAsFavoriteCatUseCase.execute(FavoriteRequestDto(id, name))
                 .collect {
                     fetchCats()
@@ -92,8 +100,14 @@ class MainViewModel(
         }
     }
 
-    fun deleteFavorite(id: String) {
-        viewModelScope.launch {
+    fun deleteFavorite(id: String, delay: Boolean = false) {
+        deleteFavoriteJob?.cancel()
+
+        deleteFavoriteJob = viewModelScope.launch {
+            if (delay) {
+                delay(1000)
+            }
+
             deleteFavouriteUseCase.execute(id)
                 .collect {
                     fetchCats()
