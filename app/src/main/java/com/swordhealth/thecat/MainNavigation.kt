@@ -1,6 +1,8 @@
 package com.swordhealth.thecat
 
 import android.net.Uri
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,18 +21,24 @@ fun MainNavigation(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = CatRoutes.catHomeScreen) {
-        composable(route = CatRoutes.catHomeScreen) {
+        composable(
+            route = CatRoutes.catHomeScreen,
+            enterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) }
+        ) {
             CatHomeScreen(mainViewModel, navController)
         }
         composable(
             route = "${CatRoutes.catDetailScreen}/{catEntityJson}",
+            enterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
             arguments = listOf(navArgument("catEntityJson") { type = NavType.StringType })
         ) { backStackEntry ->
             val catEntityJson = backStackEntry.arguments?.getString("catEntityJson")
-            val catEntity = catEntityJson?.let { Json.decodeFromString<CatUI>(it) }
+            val catUI = catEntityJson?.let { Json.decodeFromString<CatUI>(it) }
 
-            catEntity?.let {
-                CatDetailScreen(mainViewModel, navController, it)
+            catUI?.let {
+                CatDetailScreen(navController, it)
             }
         }
     }

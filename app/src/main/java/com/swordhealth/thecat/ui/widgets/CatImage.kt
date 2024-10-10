@@ -30,6 +30,7 @@ fun CatImage(cat: CatEntity) {
         contentAlignment = Alignment.Center
     ) {
         Image(
+            modifier = Modifier.fillMaxSize(),
             painter = rememberAsyncImagePainter(
                 model = imageUrl,
                 error = painterResource(id = R.drawable.bg_the_cat_place_holder),
@@ -39,8 +40,7 @@ fun CatImage(cat: CatEntity) {
                 ContentScale.Crop
             } else {
                 ContentScale.FillBounds
-            },
-            modifier = Modifier.fillMaxSize()
+            }
         )
     }
 }

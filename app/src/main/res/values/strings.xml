@@ -4,4 +4,8 @@
     <string name="cats">Cats</string>
     <string name="favorites">Favorites</string>
     <string name="average_lifespan">Lifespan</string>
+    <string name="origin">Origim</string>
+    <string name="temperament">Temperament</string>
+    <string name="description">Description</string>
+    <string name="details">Details</string>
 </resources>
