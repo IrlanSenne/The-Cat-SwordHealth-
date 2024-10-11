@@ -1,6 +1,5 @@
 package com.swordhealth.thecat.data.entities
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -8,13 +7,12 @@ import kotlinx.serialization.Serializable
 
 @Entity(tableName = "cats_list")
 data class CatEntity(
-    @ColumnInfo(name = "cat_Id")
-    @PrimaryKey
     @SerializedName("id")
     val id: String,
 
+    @PrimaryKey
     @SerializedName("name")
-    val name: String? = null,
+    val name: String,
 
     @SerializedName("origin")
     val origin: String? = null,
@@ -31,7 +29,9 @@ data class CatEntity(
     @SerializedName("image")
     val image: ImageEntity? = null,
 
-    var idFavorite: String? = null
+    var idFavorite: String? = null,
+
+    var isPendingSync : Boolean? = false
 )
 
 @Serializable

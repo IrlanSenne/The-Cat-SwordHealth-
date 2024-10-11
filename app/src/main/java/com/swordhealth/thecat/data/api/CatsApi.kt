@@ -4,6 +4,7 @@ import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.FavoriteEntity
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
 import com.swordhealth.thecat.data.entities.ImageEntity
+import com.swordhealth.thecat.data.entities.SetAsFavouriteResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -31,15 +32,10 @@ interface CatsApi {
     @POST("favourites")
     suspend fun setFavorite(
         @Body favoriteRequestDto: FavoriteRequestDto
-    ): ImageEntity
+    ): SetAsFavouriteResponse
 
     @DELETE("favourites/{favourite_id}")
     suspend fun deleteFavorite(
         @Path("favourite_id") favoriteId: String
-    ): ImageEntity
-
-    @GET("images/{image_id}")
-    suspend fun getCatById(
-        @Path("image_id") imageId: String
-    ): CatEntity
+    ): SetAsFavouriteResponse
 }

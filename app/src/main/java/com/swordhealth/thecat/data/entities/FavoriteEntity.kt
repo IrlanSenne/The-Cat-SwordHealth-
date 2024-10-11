@@ -9,6 +9,9 @@ data class FavoriteEntity(
     @SerializedName("sub_id")
     val name: String? = null,
 
+    @SerializedName("created_at")
+    val createdAt: String? = null,
+
     @SerializedName("image")
     val image: ImageEntity? = null
 )

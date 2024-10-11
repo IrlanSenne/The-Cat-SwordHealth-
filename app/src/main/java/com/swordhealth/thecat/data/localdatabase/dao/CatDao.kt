@@ -13,5 +13,11 @@ interface CatDao {
     fun getCats(): Flow<List<CatEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCats(cat: CatEntity)
+    suspend fun saveCats(cats: List<CatEntity>)
+
+    @Query("DELETE FROM cats_list WHERE id IN (:catIds)")
+    suspend fun deleteCatsByIds(catIds: List<String>)
+
+    @Query("UPDATE cats_list SET idFavorite = :idFavorite WHERE id = :name")
+    suspend fun updateFavoriteStatus(name: String, idFavorite: String?)
 }

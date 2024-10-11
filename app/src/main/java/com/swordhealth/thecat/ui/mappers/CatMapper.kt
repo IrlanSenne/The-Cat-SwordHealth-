@@ -23,7 +23,7 @@ fun CatEntity.toUI(isFromFavourite: Boolean = false) = CatUI(
 
 fun CatUI.toEntity() = CatEntity(
     id = this.id ?: "",
-    name = this.name,
+    name = this.name ?: "",
     origin = this.origin,
     temperament = this.temperament,
     description = this.description,

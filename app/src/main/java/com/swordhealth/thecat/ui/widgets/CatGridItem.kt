@@ -33,7 +33,7 @@ import com.swordhealth.thecat.data.entities.ImageEntity
 @Composable
 fun CatGridItem(
     cat: CatEntity,
-    isHomeScreen: Boolean = false,
+    isHomeScreen: Boolean = true,
     onClickDetail: (CatEntity) -> Unit = {},
     onClickFavorite: (CatEntity) -> Unit = {}
 ) {

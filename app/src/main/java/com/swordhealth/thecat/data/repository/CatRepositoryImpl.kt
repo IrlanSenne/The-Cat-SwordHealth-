@@ -1,6 +1,5 @@
 package com.swordhealth.thecat.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -8,13 +7,11 @@ import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.FavoriteEntity
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
-import com.swordhealth.thecat.data.entities.ImageEntity
+import com.swordhealth.thecat.data.entities.SetAsFavouriteResponse
 import com.swordhealth.thecat.data.localdatabase.dao.CatDao
 import com.swordhealth.thecat.data.paging.CatsPagingSource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 
 class CatRepositoryImpl(
     private val catsApi: CatsApi,
@@ -26,9 +23,11 @@ class CatRepositoryImpl(
             config = PagingConfig(
                 pageSize = 18,
                 enablePlaceholders = false,
-                prefetchDistance = 2
+                prefetchDistance = 1
             ),
-            pagingSourceFactory = { CatsPagingSource(catsApi) }
+            pagingSourceFactory = {
+                CatsPagingSource(catsApi, catDao)
+            }
         ).flow
     }
 
@@ -45,31 +44,43 @@ class CatRepositoryImpl(
 
     override fun getFavorites(): Flow<List<FavoriteEntity>> {
         return flow {
-            try {
-                val result = catsApi.getFavorites()
-                emit(result)
+            val result = try {
+                catsApi.getFavorites()
             } catch (e: Exception) {
                 emit(emptyList())
+                return@flow
             }
+            emit(result)
         }
     }
 
-    override fun setAsFavorite(imageId: String, subId: String?): Flow<ImageEntity?> {
+    override fun setAsFavorite(imageId: String, subId: String?): Flow<SetAsFavouriteResponse?> {
         return flow {
             try {
                 val result = catsApi.setFavorite(FavoriteRequestDto(imageId, subId))
-                emit(ImageEntity(id = result.id, url = result.url))
+                emit(SetAsFavouriteResponse(id = result.id))
             } catch (e: Exception) {
                 emit(null)
             }
         }
     }
 
-    override fun deleteFromFavorite(id: String): Flow<ImageEntity?> {
+    override fun updateCatFavorite(name: String, idFavourite: String?): Flow<Unit> {
+        return flow {
+            try {
+                catDao.updateFavoriteStatus(name, idFavourite)
+                emit(Unit)
+            } catch (e: Exception) {
+                emit(Unit)
+            }
+        }
+    }
+
+    override fun deleteFromFavorite(id: String): Flow<SetAsFavouriteResponse?> {
         return flow {
             try {
                 val result = catsApi.deleteFavorite(id)
-                emit(ImageEntity(id = result.id, url = result.url))
+                emit(SetAsFavouriteResponse(id = result.id))
             } catch (e: Exception) {
                 emit(null)
             }
@@ -80,10 +91,10 @@ class CatRepositoryImpl(
         return catDao.getCats()
     }
 
-    override suspend fun saveCatLocal(cat: CatEntity): Flow<Unit> {
+    override suspend fun saveCatLocal(cats: List<CatEntity>): Flow<Unit> {
         return flow {
             try {
-                catDao.saveCats(cat)
+                catDao.saveCats(cats)
                 emit(Unit)
             } catch (e: Exception) {
                 emit(Unit)
