@@ -6,8 +6,8 @@ import androidx.room.TypeConverters
 import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.localdatabase.dao.CatDao
 
+@TypeConverters(value = [Converters::class])
 @Database(entities = [CatEntity::class], version = 1)
-@TypeConverters(Converters::class)
 abstract class CatDatabase : RoomDatabase() {
     abstract fun catDao(): CatDao
 }

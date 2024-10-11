@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CatDao {
-    @Query("SELECT * FROM catEntity")
+    @Query("SELECT * FROM cats_list")
     fun getCats(): Flow<List<CatEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveCats(cat: CatEntity)
+    suspend fun saveCats(cat: CatEntity)
 }

@@ -13,5 +13,5 @@ interface CatRepository {
     fun setAsFavorite(imageId: String, subId: String?): Flow<ImageEntity?>
     fun deleteFromFavorite(id: String): Flow<ImageEntity?>
     fun getCatsLocal(): Flow<List<CatEntity>>
-    fun saveCatLocal(cat: CatEntity): Flow<Unit>
+    suspend fun saveCatLocal(cat: CatEntity): Flow<Unit>
 }

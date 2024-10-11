@@ -1,5 +1,6 @@
 package com.swordhealth.thecat.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -76,16 +77,10 @@ class CatRepositoryImpl(
     }
 
     override fun getCatsLocal(): Flow<List<CatEntity>> {
-        return flow {
-            try {
-                catDao.getCats()
-            } catch (e: Exception) {
-                emit(emptyList())
-            }
-        }
+        return catDao.getCats()
     }
 
-    override fun saveCatLocal(cat: CatEntity): Flow<Unit>  {
+    override suspend fun saveCatLocal(cat: CatEntity): Flow<Unit> {
         return flow {
             try {
                 catDao.saveCats(cat)

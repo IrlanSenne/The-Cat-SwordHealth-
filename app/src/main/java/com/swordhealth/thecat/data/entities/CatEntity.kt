@@ -1,12 +1,14 @@
 package com.swordhealth.thecat.data.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
-@Entity(tableName = "catEntity")
+@Entity(tableName = "cats_list")
 data class CatEntity(
+    @ColumnInfo(name = "cat_Id")
     @PrimaryKey
     @SerializedName("id")
     val id: String,
