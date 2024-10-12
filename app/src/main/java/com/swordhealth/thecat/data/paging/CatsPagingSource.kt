@@ -46,7 +46,8 @@ class CatsPagingSource(
 
                 apiCat.copy(
                     idFavorite = newFavoriteId,
-                    lifeSpan = "$averageLifeSpan"
+                    lifeSpan = "$averageLifeSpan",
+                    isPendingSync = false
                 )
             }.sortedBy { it.name }
 
@@ -86,21 +87,29 @@ class CatsPagingSource(
 
         pendingCats.forEach { cat ->
             try {
-                if (cat.idFavorite != null) {
+                if (cat.idFavorite == null) {
+                    val response = catsApi.setFavorite(
+                        FavoriteRequestDto(
+                            imageId = cat.image?.id ?: "",
+                            subId = "${cat.name}.${cat.lifeSpan}"
+                        )
+                    )
 
-                    catsApi.setFavorite(FavoriteRequestDto(imageId = cat.image?.id ?: "", subId = "${cat.name}.${cat.lifeSpan}"))
+                    val newFavoriteId = response.id
+
+                    catDao.updateFavoriteStatus(name = cat.name, idFavorite = newFavoriteId.toString(), isPendingSync = false)
                 } else {
-                    val favoriteEntity = catsApi.getFavorites().find { it.image?.id == cat.image?.id }
+                    catsApi.deleteFavorite(cat.idFavorite ?: "")
 
-                    if (favoriteEntity != null) {
-                        catsApi.deleteFavorite(favoriteEntity.id ?: "")
-                    }
+                    catDao.updateFavoriteStatus(name = cat.name, idFavorite = null, isPendingSync = false)
                 }
 
-                catDao.updateFavoriteStatus(cat.name, null)
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
+
 }
 
 

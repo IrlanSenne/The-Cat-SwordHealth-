@@ -65,10 +65,10 @@ class CatRepositoryImpl(
         }
     }
 
-    override fun updateCatFavorite(name: String, idFavourite: String?): Flow<Unit> {
+    override fun updateCatFavorite(name: String, idFavourite: String?, isPendingSync: Boolean): Flow<Unit> {
         return flow {
             try {
-                catDao.updateFavoriteStatus(name, idFavourite)
+                catDao.updateFavoriteStatus(name, idFavourite, isPendingSync)
                 emit(Unit)
             } catch (e: Exception) {
                 emit(Unit)

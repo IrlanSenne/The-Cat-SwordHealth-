@@ -21,21 +21,15 @@ class GetFavoritesCatsUseCase(
             try {
                 val pagingData = repository.getCatsPaging().firstOrNull()
 
-                if (pagingData != null) {
-                    emit(pagingData.filter { it.idFavorite != null })
-                } else {
-                    emit(getLocalFavorites())
-                }
+
+                pagingData?.filter {
+                    (it.idFavorite?.isNotBlank() == true && it.isPendingSync == false) ||
+                            (it.idFavorite.isNullOrBlank() == true && it.isPendingSync == true)
+                }?.let { emit(it) }
+
+
             } catch (e: Exception) {
-                emit(getLocalFavorites())
             }
         }
-    }
-
-    private suspend fun getLocalFavorites(): PagingData<CatEntity> {
-        val localCats = repository.getCatsLocal().first()
-        val favoriteCats = localCats.filter { !it.idFavorite.isNullOrEmpty() }
-
-        return PagingData.from(favoriteCats)
     }
 }

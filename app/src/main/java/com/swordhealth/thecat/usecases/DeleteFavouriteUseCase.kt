@@ -1,7 +1,5 @@
 package com.swordhealth.thecat.usecases
 
-import android.util.Log
-import com.swordhealth.thecat.data.entities.CatEntity
 import com.swordhealth.thecat.data.entities.SetAsFavouriteResponse
 import com.swordhealth.thecat.data.repository.CatRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,14 +24,9 @@ class DeleteFavouriteUseCase(
             }
 
             if (deleteResponse != null) {
-                localCat?.let {
-                    updateLocalFavorite(it, isPendingSync = false)
-                }
                 emit(deleteResponse)
             } else {
-                localCat?.let {
-                    updateLocalFavorite(it, isPendingSync = true)
-                }
+                localCat?.let { deleteLocalFavorite(it.image?.id, id) }
                 emit(null)
             }
         }.catch { e ->
@@ -41,8 +34,21 @@ class DeleteFavouriteUseCase(
         }
     }
 
-    private suspend fun updateLocalFavorite(cat: CatEntity, isPendingSync: Boolean) {
-        val updatedCat = cat.copy(idFavorite = null, isPendingSync = isPendingSync)
-        repository.saveCatLocal(listOf(updatedCat)).collect {}
+    private suspend fun deleteLocalFavorite(
+        imageId: String?,
+        id: String?,
+    ) {
+        val localCats = repository.getCatsLocal().first().toMutableList()
+
+        val catToUpdate = localCats.find { it.image?.id == imageId }
+
+        if (catToUpdate != null) {
+            val updatedCat = catToUpdate.copy(isPendingSync = true, idFavorite = id)
+
+            localCats[localCats.indexOf(catToUpdate)] = updatedCat
+
+            repository.saveCatLocal(localCats).collect {}
+        }
     }
+
 }

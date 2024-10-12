@@ -18,6 +18,7 @@ interface CatDao {
     @Query("DELETE FROM cats_list WHERE id IN (:catIds)")
     suspend fun deleteCatsByIds(catIds: List<String>)
 
-    @Query("UPDATE cats_list SET idFavorite = :idFavorite WHERE id = :name")
-    suspend fun updateFavoriteStatus(name: String, idFavorite: String?)
+    @Query("UPDATE cats_list SET idFavorite = :idFavorite, isPendingSync = :isPendingSync WHERE name = :name")
+    suspend fun updateFavoriteStatus(name: String, idFavorite: String?, isPendingSync: Boolean)
+
 }

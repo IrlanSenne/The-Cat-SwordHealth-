@@ -31,7 +31,7 @@ data class CatEntity(
 
     var idFavorite: String? = null,
 
-    var isPendingSync : Boolean? = false
+    var isPendingSync : Boolean = false
 )
 
 @Serializable

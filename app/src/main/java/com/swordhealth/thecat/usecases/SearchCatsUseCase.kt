@@ -42,12 +42,6 @@ class SearchCatsUseCase(
             it.name.contains(query, ignoreCase = true)
         }
 
-        val favoritesList = repository.getFavorites().first()
-        val favoritesMap = favoritesList.associateBy { it.image?.id }
-
-        return filteredLocalCats.map { catEntity ->
-            val favoriteEntity = favoritesMap[catEntity.image?.id]
-            catEntity.copy(idFavorite = favoriteEntity?.id)
-        }
+        return filteredLocalCats
     }
 }

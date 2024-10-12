@@ -1,6 +1,5 @@
 package com.swordhealth.thecat.usecases
 
-import android.util.Log
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
 import com.swordhealth.thecat.data.entities.SetAsFavouriteResponse
 import com.swordhealth.thecat.data.repository.CatRepository
@@ -18,8 +17,6 @@ class SetAsFavoriteCatUseCase(
         favoriteRequestDto: FavoriteRequestDto
     ): Flow<SetAsFavouriteResponse?> {
         return flow {
-            val textInformations = favoriteRequestDto.subId?.split(".") ?: emptyList()
-            val name = if (textInformations.size > 1) textInformations[0] else ""
 
             val favouriteResponse = repository.setAsFavorite(
                 imageId = favoriteRequestDto.imageId,
@@ -27,12 +24,9 @@ class SetAsFavoriteCatUseCase(
             ).last()
 
             if (favouriteResponse != null) {
-                Log.d("SetAsFavoriteCatUseCase", "favouriteResponse != null")
-                updateLocalFavorite(name, favoriteRequestDto.imageId, false)
                 emit(favouriteResponse)
             } else {
-                Log.d("SetAsFavoriteCatUseCase", "favouriteResponse == NULL")
-                updateLocalFavorite(name, favoriteRequestDto.imageId, true)
+                updateLocalFavorite(favoriteRequestDto.imageId)
                 emit(null)
             }
         }.catch { e ->
@@ -40,17 +34,22 @@ class SetAsFavoriteCatUseCase(
         }
     }
 
-    private suspend fun updateLocalFavorite(name: String, imageId: String, isPendentSync: Boolean) {
-        val localCats = repository.getCatsLocal().first().toMutableList()
+    private suspend fun updateLocalFavorite(
+        imageId: String?
+    ) {
+        val localCats = repository.getCatsLocal().first().sortedBy { it.name }.toMutableList()
 
-        val catToUpdate = localCats.find { it.name == name }
+        val catToUpdate = localCats.find { it.image?.id == imageId }
+
         if (catToUpdate != null) {
-            val updatedCat = catToUpdate.copy(idFavorite = imageId, isPendingSync = isPendentSync)
+            val updatedCat = catToUpdate.copy(idFavorite = null, isPendingSync = true)
+
             localCats[localCats.indexOf(catToUpdate)] = updatedCat
 
             repository.saveCatLocal(localCats).collect {}
         }
     }
+
 }
 
 
