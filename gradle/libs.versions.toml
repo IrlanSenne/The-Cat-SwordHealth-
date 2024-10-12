@@ -23,6 +23,7 @@ pagingCompose = "3.3.2"
 kotlinxSerializationJson = "1.6.3"
 room = "2.6.1"
 ksp = "2.0.20-1.0.24"
+mockk = "1.13.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,8 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3Version" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }

@@ -50,5 +50,4 @@ class DeleteFavouriteUseCase(
             repository.saveCatLocal(localCats).collect {}
         }
     }
-
 }

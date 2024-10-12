@@ -49,7 +49,6 @@ class SetAsFavoriteCatUseCase(
             repository.saveCatLocal(localCats).collect {}
         }
     }
-
 }
 
 

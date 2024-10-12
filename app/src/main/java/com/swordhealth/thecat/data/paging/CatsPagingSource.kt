@@ -1,5 +1,6 @@
 package com.swordhealth.thecat.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.swordhealth.thecat.data.api.CatsApi
