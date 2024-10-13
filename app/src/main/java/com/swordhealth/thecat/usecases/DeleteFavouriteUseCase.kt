@@ -34,16 +34,18 @@ class DeleteFavouriteUseCase(
         }
     }
 
-    private suspend fun deleteLocalFavorite(
-        imageId: String?,
-        id: String?,
-    ) {
+    private suspend fun deleteLocalFavorite(imageId: String?, id: String?) {
         val localCats = repository.getCatsLocal().first().toMutableList()
-
         val catToUpdate = localCats.find { it.image?.id == imageId }
 
         if (catToUpdate != null) {
-            val updatedCat = catToUpdate.copy(isPendingSync = true, idFavorite = id)
+            val isTemporaryFavorite = id?.startsWith("TEMP_") == true
+
+            val updatedCat = if (isTemporaryFavorite) {
+                catToUpdate.copy(isPendingSync = false, idFavorite = null)
+            } else {
+                catToUpdate.copy(isPendingSync = true)
+            }
 
             localCats[localCats.indexOf(catToUpdate)] = updatedCat
 

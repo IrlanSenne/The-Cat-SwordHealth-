@@ -1,6 +1,5 @@
 package com.swordhealth.thecat.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.swordhealth.thecat.data.api.CatsApi
@@ -52,7 +51,6 @@ class CatsPagingSource(
                 )
             }.sortedBy { it.name }
 
-
             catDao.saveCats(updatedCats)
 
             LoadResult.Page(
@@ -88,7 +86,7 @@ class CatsPagingSource(
 
         pendingCats.forEach { cat ->
             try {
-                if (cat.idFavorite == null) {
+                if (cat.idFavorite?.startsWith("TEMP_") == true) {
                     val response = catsApi.setFavorite(
                         FavoriteRequestDto(
                             imageId = cat.image?.id ?: "",
@@ -98,11 +96,20 @@ class CatsPagingSource(
 
                     val newFavoriteId = response.id
 
-                    catDao.updateFavoriteStatus(name = cat.name, idFavorite = newFavoriteId.toString(), isPendingSync = false)
-                } else {
-                    catsApi.deleteFavorite(cat.idFavorite ?: "")
+                    catDao.updateFavoriteStatus(
+                        name = cat.name,
+                        idFavorite = newFavoriteId.toString(),
+                        isPendingSync = false
+                    )
 
-                    catDao.updateFavoriteStatus(name = cat.name, idFavorite = null, isPendingSync = false)
+                } else if (cat.idFavorite != null) {
+                    cat.idFavorite?.let { catsApi.deleteFavorite(it) }
+
+                    catDao.updateFavoriteStatus(
+                        name = cat.name,
+                        idFavorite = null,
+                        isPendingSync = false
+                    )
                 }
 
             } catch (e: Exception) {
@@ -110,7 +117,6 @@ class CatsPagingSource(
             }
         }
     }
-
 }
 
 

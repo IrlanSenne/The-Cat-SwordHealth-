@@ -72,7 +72,7 @@ fun FavoritesCatsScreen(
                     isHomeScreen = false,
                     listLazy = catsFavouritesPagingItems,
                     onClickFavourite = { cat ->
-                        mainViewModel?.deleteFavorite(cat.idFavorite ?: "")
+                        cat.idFavorite?.let { mainViewModel?.deleteFavorite(it) }
                     },
                     onClickDetail = { catEntity ->
                         navigateWithObject(

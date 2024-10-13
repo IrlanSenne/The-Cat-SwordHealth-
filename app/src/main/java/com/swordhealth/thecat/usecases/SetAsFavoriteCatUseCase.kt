@@ -34,19 +34,19 @@ class SetAsFavoriteCatUseCase(
         }
     }
 
-    private suspend fun updateLocalFavorite(
-        imageId: String?
-    ) {
-        val localCats = repository.getCatsLocal().first().sortedBy { it.name }.toMutableList()
-
+    private suspend fun updateLocalFavorite(imageId: String?) {
+        val localCats = repository.getCatsLocal().first().toMutableList()
         val catToUpdate = localCats.find { it.image?.id == imageId }
 
         if (catToUpdate != null) {
-            val updatedCat = catToUpdate.copy(idFavorite = null, isPendingSync = true)
+            val tempFavoriteId = "TEMP_${catToUpdate.image?.id}"
 
-            localCats[localCats.indexOf(catToUpdate)] = updatedCat
+            if (catToUpdate.idFavorite == null || catToUpdate.isPendingSync) {
 
-            repository.saveCatLocal(localCats).collect {}
+                val updatedCat = catToUpdate.copy(idFavorite = tempFavoriteId, isPendingSync = true)
+                localCats[localCats.indexOf(catToUpdate)] = updatedCat
+                repository.saveCatLocal(localCats).collect {}
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ class MainViewModel(
     private val searchCatsUseCase: SearchCatsUseCase,
     private val getFavoritesCatsUseCase: GetFavoritesCatsUseCase,
     private val setAsFavoriteCatUseCase: SetAsFavoriteCatUseCase,
-    private val deleteFavouriteUseCase: DeleteFavouriteUseCase,
+    private val deleteFavouriteUseCase: DeleteFavouriteUseCase
 ) : ViewModel() {
 
     private val _catsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
@@ -99,6 +99,7 @@ class MainViewModel(
                 }
         }
     }
+
 
     fun deleteFavorite(id: String, delay: Boolean = false) {
         deleteFavoriteJob?.cancel()

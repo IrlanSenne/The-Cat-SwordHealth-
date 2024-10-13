@@ -46,12 +46,17 @@ fun CatGridItem(
         ) {
             CatImage(cat)
 
-
             FavoriteIcon(
                 sizeBox = 30,
                 sizeImage = 24,
-                isFavorite =  (cat.idFavorite?.isNotBlank() == true && cat.isPendingSync == false) || (cat.idFavorite.isNullOrBlank() == true && cat.isPendingSync == true),
-                onClick = { onClickFavorite(cat) },
+                isFavorite = when {
+                    cat.idFavorite?.startsWith("TEMP_") == true -> true
+                    cat.idFavorite?.isNotBlank() == true && cat.isPendingSync == false -> true
+                    cat.idFavorite.isNullOrBlank() && cat.isPendingSync == true -> true
+                    else -> false
+                },
+
+                        onClick = { onClickFavorite(cat) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .offset(x = -(8.dp), y = 8.dp)

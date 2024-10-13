@@ -23,8 +23,8 @@ class GetFavoritesCatsUseCase(
 
 
                 pagingData?.filter {
-                    (it.idFavorite?.isNotBlank() == true && it.isPendingSync == false) ||
-                            (it.idFavorite.isNullOrBlank() == true && it.isPendingSync == true)
+                    (it.idFavorite?.isNotBlank() == true && !it.idFavorite!!.startsWith("TEMP_") && !it.isPendingSync) ||
+                            (it.isPendingSync && it.idFavorite?.startsWith("TEMP_") == true)
                 }?.let { emit(it) }
 
 

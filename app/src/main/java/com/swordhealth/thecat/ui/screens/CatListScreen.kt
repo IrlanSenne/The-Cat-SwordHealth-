@@ -77,15 +77,15 @@ fun CatListScreen(
                     listLazy = catsPagingItems,
                     onClickFavourite = { cat ->
                         val idFavorite = cat.idFavorite
+                        val isSyncPending = cat.isPendingSync
                         val imageId = cat.image?.id
 
-                        if (!idFavorite.isNullOrEmpty()) {
-                            mainViewModel?.deleteFavorite(idFavorite)
-                            return@CatGrid
-                        }
-
-                        if (!imageId.isNullOrEmpty()) {
-                            mainViewModel?.setAsFavorite(imageId, "${cat.name}.${cat.lifeSpan}")
+                        if (idFavorite?.isNotBlank() == true && !idFavorite.startsWith("TEMP_") && !isSyncPending || (isSyncPending && idFavorite?.startsWith("TEMP_") == true)) {
+                            if (idFavorite != null) {
+                                mainViewModel?.deleteFavorite(idFavorite)
+                            }
+                        } else {
+                            mainViewModel?.setAsFavorite(imageId ?: "", "${cat.name}.${cat.lifeSpan}")
                         }
                     },
                     onClickDetail = { catEntity ->
@@ -97,6 +97,7 @@ fun CatListScreen(
                         )
                     }
                 )
+
             }
         }
 
