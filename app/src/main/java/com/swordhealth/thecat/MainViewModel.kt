@@ -39,6 +39,11 @@ class MainViewModel(
     private var deleteFavoriteJob: Job? = null
     private val searchQuery = MutableStateFlow("")
 
+    init {
+        fetchCats()
+        getFavoritesCats()
+    }
+
     fun fetchCats() {
         viewModelScope.launch {
             getCatsUseCase.execute(Unit)

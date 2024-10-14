@@ -55,8 +55,7 @@ fun CatGridItem(
                     cat.idFavorite.isNullOrBlank() && cat.isPendingSync == true -> true
                     else -> false
                 },
-
-                        onClick = { onClickFavorite(cat) },
+                onClick = { onClickFavorite(cat) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .offset(x = -(8.dp), y = 8.dp)
@@ -65,19 +64,37 @@ fun CatGridItem(
 
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = cat.name ?: "",
+            text = cat.name,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         )
 
         if (cat.idFavorite?.isNotEmpty() == true && !isHomeScreen) {
             Text(
-                text = "${stringResource(R.string.average_lifespan)}: ${cat.lifeSpan ?: ""}y",
+                text = "${stringResource(R.string.average_lifespan)}: ${calculateAverageLifeSpan(cat.lifeSpan)}y",
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp
             )
         }
     }
+}
+
+fun calculateAverageLifeSpan(lifeSpan: String?): Int {
+    val textInformations = lifeSpan?.split("-") ?: emptyList()
+    if (textInformations.size == 2) {
+        val firstValue = textInformations[0].trim()
+        val lastValue = textInformations[1].trim()
+
+        if (firstValue.all { it.isDigit() } && lastValue.all { it.isDigit() }) {
+            val firstLifeSpan = firstValue.toInt()
+            val lastLifeSpan = lastValue.toInt()
+
+            // Calculando a média
+            return (firstLifeSpan + lastLifeSpan) / 2
+        }
+    }
+
+    return 0
 }
 
 @Preview(showBackground = true)

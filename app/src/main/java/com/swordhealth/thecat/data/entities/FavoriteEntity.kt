@@ -7,7 +7,7 @@ data class FavoriteEntity(
     val id: String? = null,
 
     @SerializedName("sub_id")
-    val name: String? = null,
+    val subId: String? = null,
 
     @SerializedName("created_at")
     val createdAt: String? = null,

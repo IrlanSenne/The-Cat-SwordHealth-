@@ -44,11 +44,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("testInternet", "No internet")
-    }
-
     override fun onStop() {
         super.onStop()
         unregisterNetworkCallback()

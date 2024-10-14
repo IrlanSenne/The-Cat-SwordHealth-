@@ -1,9 +1,11 @@
 package com.swordhealth.thecat.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.swordhealth.thecat.data.api.CatsApi
 import com.swordhealth.thecat.data.entities.CatEntity
+import com.swordhealth.thecat.data.entities.FavoriteEntity
 import com.swordhealth.thecat.data.entities.FavoriteRequestDto
 import com.swordhealth.thecat.data.localdatabase.dao.CatDao
 import kotlinx.coroutines.flow.first
@@ -32,21 +34,8 @@ class CatsPagingSource(
                 val favoriteEntity = favoritesMap[apiCat.image?.id]
                 val newFavoriteId = favoriteEntity?.id
 
-                val textInformations = favoriteEntity?.name?.split(".") ?: emptyList()
-
-                val lifeSpanFavorite = if (textInformations.size > 1) textInformations[1] else ""
-
-                val lifeSpanRange = lifeSpanFavorite.split("-").mapNotNull { it.trim().toIntOrNull() }
-
-                val averageLifeSpan = if (lifeSpanRange.size == 2) {
-                    (lifeSpanRange[0] + lifeSpanRange[1]) / 2
-                } else {
-                    0
-                }
-
                 apiCat.copy(
                     idFavorite = newFavoriteId,
-                    lifeSpan = "$averageLifeSpan",
                     isPendingSync = false
                 )
             }.sortedBy { it.name }
@@ -71,6 +60,23 @@ class CatsPagingSource(
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
+    }
+
+    private fun fl(favoriteEntity: FavoriteEntity?): Float {
+        val textInformations = favoriteEntity?.subId?.split(".") ?: emptyList()
+
+        // Verificar se existe um segundo elemento (a parte de vida útil)
+        val lifeSpanFavorite = if (textInformations.size > 1) textInformations[1].trim() else ""
+
+        // Debug: Verificar o valor extraído
+        println("lifeSpanFavorite: '$lifeSpanFavorite'")
+
+        // Tentar fazer o split usando "-" e pegar o primeiro número
+        val firstLifeSpan = lifeSpanFavorite.split("-").firstOrNull()?.trim()?.toFloatOrNull() ?: 0f
+
+        // Debug: Verificar o primeiro número da faixa de vida útil
+        println("First Life Span: $firstLifeSpan")
+        return firstLifeSpan
     }
 
     override fun getRefreshKey(state: PagingState<Int, CatEntity>): Int? {
