@@ -31,15 +31,13 @@ class MainViewModel(
     private val _favoritesCatsState: MutableStateFlow<PagingData<CatEntity>> = MutableStateFlow(PagingData.empty())
     val favoritesCatsState: StateFlow<PagingData<CatEntity>> get() = _favoritesCatsState
 
+    private val _internetStatus = MutableStateFlow(false)
+    val internetStatus: StateFlow<Boolean> = _internetStatus
+
     private var searchJob: Job? = null
     private var setAsFavoriteJob: Job? = null
     private var deleteFavoriteJob: Job? = null
     private val searchQuery = MutableStateFlow("")
-
-    init {
-        fetchCats()
-        getFavoritesCats()
-    }
 
     fun fetchCats() {
         viewModelScope.launch {
@@ -115,5 +113,9 @@ class MainViewModel(
                     getFavoritesCats()
                 }
         }
+    }
+
+    fun updateInternetStatus(isConnected: Boolean) {
+        _internetStatus.value = isConnected
     }
 }
